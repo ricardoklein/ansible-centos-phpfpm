@@ -1,0 +1,5 @@
+---
+# handlers file for uni-phpfpm
+
+- name: php-fpm-restart
+  systemd: name=php-fpm state=restarted daemon_reload=yes

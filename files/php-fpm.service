@@ -1,0 +1,15 @@
+[Unit]
+Description=The PHP FastCGI Process Manager
+
+[Service]
+Type=notify
+PrivateTmp=true
+ExecStart=/usr/sbin/php-fpm --nodaemonize
+ExecReload=/bin/kill -USR2 $MAINPID
+WatchdogSec=15
+ProtectSystem=full
+ProtectHome=read-only
+LimitNOFILE=31000
+
+[Install]
+WantedBy=multi-user.target

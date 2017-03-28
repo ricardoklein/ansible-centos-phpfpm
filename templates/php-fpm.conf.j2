@@ -1,0 +1,50 @@
+;;;;;;;;;;;;;;;;;;;;;
+; FPM Configuration ;
+;;;;;;;;;;;;;;;;;;;;;
+;include=etc/fpm.d/*.conf
+
+;;;;;;;;;;;;;;;;;;
+; Global Options ;
+;;;;;;;;;;;;;;;;;;
+
+[global]
+;pid = /var/run/php-fpm/php-fpm.pid
+;error_log = log/php-fpm.log
+;syslog.facility = daemon
+;syslog.ident = php-fpm
+;log_level = notice
+;emergency_restart_threshold = 0
+;emergency_restart_interval = 0
+;process_control_timeout = 0
+process.max = {{ ansible_centos_phpfpm__process_max }}
+; process.priority = -19
+;daemonize = yes
+;rlimit_files = 1024
+;rlimit_core = 0
+
+;;;;;;;;;;;;;;;;;;;;
+; Pool Definitions ; 
+;;;;;;;;;;;;;;;;;;;;
+[www]
+;prefix = /path/to/pools/$pool
+user  = {{ ansible_centos_phpfpm__user }}
+group = {{ ansible_centos_phpfpm__group }}
+listen = {{ ansible_centos_phpfpm__listen }}
+;listen.backlog = 128
+;listen.allowed_clients = 127.0.0.1
+; priority = -19
+pm = dynamic
+pm.max_children = {{ ansible_centos_phpfpm__pm_max_children }}
+pm.start_servers = {{ ansible_centos_phpfpm__pm_start_servers }}
+pm.min_spare_servers = {{ ansible_centos_phpfpm__pm_min_spare_servers }}
+pm.max_spare_servers = {{ ansible_centos_phpfpm__pm_max_spare_servers }}
+pm.process_idle_timeout = {{ ansible_centos_phpfpm__pm_process_idle_timeout }}
+pm.max_requests = {{ ansible_centos_phpfpm__pm_max_requests }}
+pm.status_path = /phpstatus
+ping.path = /phpping
+;slowlog = log/$pool.log.slow
+;request_slowlog_timeout = 0
+;request_terminate_timeout = 0
+;catch_workers_output = yes
+;security.limit_extensions = .php .php3 .php4 .php5
+

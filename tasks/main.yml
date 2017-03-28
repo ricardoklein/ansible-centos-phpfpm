@@ -1,0 +1,76 @@
+---
+- name: Set SELinux ansible_php-fpm_selinux_booleans
+  seboolean: name={{ item }} state=yes persistent=yes
+  with_items: "{{ ansible_centos_phpfpm__selinux_booleans }}"
+  when: ansible_centos_phpfpm__selinux_booleans is defined
+
+- name: Create php user group
+  group:
+    name: "{{ ansible_centos_phpfpm__group }}"
+    gid: "{{ ansible_centos_phpfpm__group_uid }}"
+
+- name: Create php user "{{ ansible_centos_phpfpm__user }}"
+  user:
+    name: "{{ ansible_centos_phpfpm__user }}"
+    uid: "{{ ansible_centos_phpfpm__user_uid }}"
+    group: "{{ ansible_centos_phpfpm__group }}"
+    home: "{{ ansible_centos_phpfpm__user_home }}"
+    shell: "{{ ansible_centos_phpfpm__user_shell }}"
+
+
+- name: Setup Extra php-fpm repositories
+  template:
+    src: php.repo.j2
+    dest: /etc/yum.repos.d/{{ item.name }}.repo
+    owner: root
+    group: root
+    mode: 0644
+  with_items: "{{ ansible_centos_phpfpm__extrarepo }}"
+  when: ansible_centos_phpfpm__extrarepo is defined
+
+- name: Install php-fpm
+  yum: name={{ item }} state=latest update_cache=yes
+  with_items: "{{ ansible_centos_phpfpm__packages }}"
+
+- name: create /var/run/php-fpm
+  file:
+    path: /var/run/php-fpm
+    state: directory
+    mode: 0755
+    owner: "{{ ansible_centos_phpfpm__user }}"
+    group: "{{ ansible_centos_phpfpm__group }}"
+
+- name: Copy php-fpm.service (systemd)
+  copy:
+    src=php-fpm.service
+    dest=/usr/lib/systemd/system/php-fpm.service
+    owner=root
+    group=root
+    mode=0644
+
+- name: Copy php.ini
+  template:
+    src: php.ini.j2
+    dest: /etc/php.ini
+    owner: root
+    group: root
+    mode: 0644
+  notify: php-fpm-restart
+    
+- name: Copy php-fpm.conf
+  template:
+    src: php-fpm.conf.j2
+    dest: /etc/php-fpm.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: php-fpm-restart
+
+- name: Set php-fpm to start on boot
+  systemd:
+    name: php-fpm
+    enabled: yes
+    state: started
+    daemon_reload: yes
+
+

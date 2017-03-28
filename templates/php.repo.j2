@@ -1,0 +1,10 @@
+# 
+# ANSIBLE MANAGED FILE
+# You should not edit this file on the server, only in the ansible source
+#
+
+[{{ item.name }}]
+name={{ item.desc }}
+baseurl={{ item.url }}
+gpgcheck=0
+enabled=1
