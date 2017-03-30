@@ -11,7 +11,8 @@ ansible_centos_phpfpm__user_uid: 994
 ansible_centos_phpfpm__user_home: /var/cache/nginx
 ansible_centos_phpfpm__user_shell: /sbin/nologin
 
-
+ansible_centos_phpfpm__yum_state: present
+ansible_centos_phpfpm__yum_updatecache: no
 ansible_centos_phpfpm__packages:
   - php-cli
   - php-fpm

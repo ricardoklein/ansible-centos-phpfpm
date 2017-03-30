@@ -4,7 +4,7 @@
   with_items: "{{ ansible_centos_phpfpm__selinux_booleans }}"
   when: ansible_centos_phpfpm__selinux_booleans is defined
 
-- name: Create php user group "{{ ansible_centos_phpfpm__group }}
+- name: Create php user group "{{ ansible_centos_phpfpm__group }}"
   group:
     name: "{{ ansible_centos_phpfpm__group }}"
     gid: "{{ ansible_centos_phpfpm__group_uid }}"
@@ -28,7 +28,10 @@
   when: ansible_centos_phpfpm__extrarepo is defined
 
 - name: Install php-fpm
-  yum: name={{ item }} state=latest update_cache=yes
+  yum: 
+    name: "{{ item }}"
+    state: "{{ansible_centos_phpfpm__yum_state }}"
+    update_cache: "{{ ansible_centos_phpfpm__yum_updatecache }}"
   with_items: "{{ ansible_centos_phpfpm__packages }}"
 
 - name: create /var/run/php-fpm
