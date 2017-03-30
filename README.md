@@ -11,7 +11,7 @@ I recommend you to run my ansible-centos-base role before anything on CentOS7.
 Role Variables
 --------------
 
-All variables are setup on defaults/min.yml.
+All variables are setup on defaults/main.yml.
 
 ### Not set by default, this can be used to enable selinux-boleans (you need libselinux-python for this):
     ansible_centos_phpfpm__selinux_booleans:
@@ -47,11 +47,40 @@ All variables are setup on defaults/min.yml.
     ansible_centos_phpfpm__max_file_uploads: 10
     ansible_centos_phpfpm__allow_url_fopen: On
     ansible_centos_phpfpm__date_timezone: 'America/Sao_Paulo'
-    ansible_centos_phpfpm__session_save_handler: files
-    ansible_centos_phpfpm__session_save_path: /tmp
-    ansible_centos_phpfpm__session_name: PHPSESSID
-    ansible_centos_phpfpm__opcache_enabled: 0
-    ansible_centos_phpfpm__opcache_memory_consumption: 64
+
+### php.ini extra parameters 
+You can set some extra configurations to php.ini, like the ones wich comes on /etc/php.d/\*.ini right here, we have some "defaults" set on defaults/main, like this:<enter>
+
+      - name: Session
+        iniparams: |
+            [Session]
+            session.save_handler = files
+            session.save_path = "/tmp"
+            session.use_strict_mode = 0
+            session.use_cookies = 1
+            ;session.cookie_secure =
+            session.use_only_cookies = 1
+            session.name = PHPSESSID
+            session.auto_start = 0
+            session.cookie_lifetime = 0
+            session.cookie_path = /
+            session.cookie_domain =
+            session.cookie_httponly =
+            session.serialize_handler = php
+            session.gc_probability = 1
+            session.gc_divisor = 1000
+            session.gc_maxlifetime = 1440
+            session.referer_check =
+            session.cache_limiter = nocache
+            session.cache_expire = 180
+            session.use_trans_sid = 0
+            session.hash_function = 0
+            session.hash_bits_per_character = 5
+            url_rewriter.tags = "a=href,area=href,frame=src,input=src,form=fakeentry"
+      - name: Assertion
+        iniparams: |
+            [Assertion]
+            zend.assertions = -1
 
 ### php-fpm.conf template variables
     ansible_centos_phpfpm__process_max: 30
@@ -62,8 +91,12 @@ All variables are setup on defaults/min.yml.
     ansible_centos_phpfpm__pm_max_spare_servers: 30
     ansible_centos_phpfpm__pm_process_idle_timeout: 10
     ansible_centos_phpfpm__pm_max_requests: 300
+
+### php-fpm.conf extra parameters (not set by default)
+    #ansible_centos_phpfpm__phpfpmconf_params: |
+    #   env[FOO] = BAR
     
-### If you want to setup a different repo to download packages (like the good remi packages), you can do like this (not setup by default):
+### If you want to setup a different repo to download packages (like the good remi packages), you can do like this (not set by default):
     ansible_centos_phpfpm__extrarepo:
       - { name: 'REMIPHP71', desc: 'REMI PHP Packages', url: 'https://rpms.remirepo.net/enterprise/7/php71/x86_64/' }
       - { name: 'REMIPHPSafe', desc: 'REMI Safe Packages', url: 'https://rpms.remirepo.net/enterprise/7/safe/x86_64/' }

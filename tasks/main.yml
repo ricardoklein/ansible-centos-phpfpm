@@ -4,7 +4,7 @@
   with_items: "{{ ansible_centos_phpfpm__selinux_booleans }}"
   when: ansible_centos_phpfpm__selinux_booleans is defined
 
-- name: Create php user group
+- name: Create php user group "{{ ansible_centos_phpfpm__group }}
   group:
     name: "{{ ansible_centos_phpfpm__group }}"
     gid: "{{ ansible_centos_phpfpm__group_uid }}"
@@ -16,12 +16,6 @@
     group: "{{ ansible_centos_phpfpm__group }}"
     home: "{{ ansible_centos_phpfpm__user_home }}"
     shell: "{{ ansible_centos_phpfpm__user_shell }}"
-
-- name: Ensure /etc/php.d exists
-  file:
-    path: /etc/php.d
-    state: directory
-    mode: 0755
 
 - name: Setup Extra php-fpm repositories
   template:
@@ -52,6 +46,12 @@
     owner=root
     group=root
     mode=0644
+    
+- name: Ensure /etc/php.d exists
+  file:
+    path: /etc/php.d
+    state: directory
+    mode: 0755
 
 - name: Copy php.ini
   template:
@@ -61,7 +61,7 @@
     group: root
     mode: 0644
   notify: php-fpm-restart
-    
+ 
 - name: Copy php-fpm.conf
   template:
     src: php-fpm.conf.j2
@@ -70,6 +70,13 @@
     group: root
     mode: 0644
   notify: php-fpm-restart
+
+  #- name: Configure extra directives
+  #  template:
+    #    src: extra-ini.j2
+    #    dest: /etc/php.d/extra.ini
+    #    owner: root
+    #  when: ansible_centos_phpfpm__extra_ini is defined
 
 - name: Set php-fpm to start on boot
   systemd:

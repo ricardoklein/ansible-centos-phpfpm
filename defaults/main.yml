@@ -13,7 +13,7 @@ ansible_centos_phpfpm__user_shell: /sbin/nologin
 
 
 ansible_centos_phpfpm__packages:
-  - php
+  - php-cli
   - php-fpm
 
 
@@ -32,11 +32,7 @@ ansible_centos_phpfpm__upload_max_filesize: 4M
 ansible_centos_phpfpm__max_file_uploads: 10
 ansible_centos_phpfpm__allow_url_fopen: On
 ansible_centos_phpfpm__date_timezone: 'America/Sao_Paulo'
-ansible_centos_phpfpm__session_save_handler: files
-ansible_centos_phpfpm__session_save_path: /tmp
-ansible_centos_phpfpm__session_name: PHPSESSID
-ansible_centos_phpfpm__opcache_enabled: 0
-ansible_centos_phpfpm__opcache_memory_consumption: 64
+ansible_centos_phpfpm__default_charset: UTF-8
 
 ansible_centos_phpfpm__process_max: 30
 ansible_centos_phpfpm__listen: "127.0.0.1:9000"
@@ -50,3 +46,86 @@ ansible_centos_phpfpm__pm_max_requests: 300
 #ansible_centos_phpfpm__extrarepo:
 #  - { name: 'REMIPHP71', desc: 'REMI PHP Packages', url: 'https://rpms.remirepo.net/enterprise/7/php71/x86_64/' }
 #  - { name: 'REMIPHPSafe', desc: 'REMI Safe Packages', url: 'https://rpms.remirepo.net/enterprise/7/safe/x86_64/' }
+
+
+ansible_centos_phpfpm__extra_ini:
+  - name: mail function
+    iniparams: |
+      [mail function]
+      smtp_port = 25
+      mail.add_x_header = On
+  - name: SQL
+    iniparams: |
+      [SQL]
+      sql.safe_mode = Off
+  - name: ODBC
+    iniparams: |
+      [ODBC]
+      odbc.check_persistent = On
+      odbc.max_persistent = -1
+      odbc.max_links = -1
+      odbc.defaultlrl = 4096
+      odbc.defaultbinmode = 1
+  - name: MySQLi
+    iniparams: |
+      [MySQLi]
+      mysqli.max_persistent = -1
+      mysqli.allow_persistent = On
+      mysqli.max_links = -1
+      mysqli.cache_size = 2000
+      mysqli.default_port = 3306
+      mysqli.reconnect = Off
+  - name: MySQLnd
+    iniparams: |
+      [mysqlnd]
+      mysqlnd.collect_statistics = On
+      mysqlnd.collect_memory_statistics = Off
+  - name: bcmath
+    iniparams: |
+      [bcmath]
+      bcmath.scale = 0
+  - name: Session
+    iniparams: |
+      [Session]
+      session.save_handler = files
+      session.save_path = "/tmp"
+      session.use_strict_mode = 0
+      session.use_cookies = 1
+      ;session.cookie_secure =
+      session.use_only_cookies = 1
+      session.name = PHPSESSID
+      session.auto_start = 0
+      session.cookie_lifetime = 0
+      session.cookie_path = /
+      session.cookie_domain =
+      session.cookie_httponly =
+      session.serialize_handler = php
+      session.gc_probability = 1
+      session.gc_divisor = 1000
+      session.gc_maxlifetime = 1440
+      session.referer_check =
+      session.cache_limiter = nocache
+      session.cache_expire = 180
+      session.use_trans_sid = 0
+      session.hash_function = 0
+      session.hash_bits_per_character = 5
+      url_rewriter.tags = "a=href,area=href,frame=src,input=src,form=fakeentry"
+  - name: Assertion
+    iniparams: |
+      [Assertion]
+      zend.assertions = -1
+  - name: Tidy
+    iniparams: |
+      [Tidy]
+      tidy.clean_output = Off
+  - name: soap
+    iniparams: |
+      [soap]
+      soap.wsdl_cache_enabled=1
+      soap.wsdl_cache_dir="/tmp"
+      soap.wsdl_cache_ttl=86400
+      soap.wsdl_cache_limit = 5
+  - name: ldap
+    iniparams: |
+      [ldap]
+      ldap.max_links = -1
