@@ -17,6 +17,11 @@
     home: "{{ ansible_centos_phpfpm__user_home }}"
     shell: "{{ ansible_centos_phpfpm__user_shell }}"
 
+- name: Ensure /etc/php.d exists
+  file:
+    path: /etc/php.d
+    state: directory
+    mode: 0755
 
 - name: Setup Extra php-fpm repositories
   template:
