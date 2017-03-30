@@ -1,6 +1,6 @@
 galaxy_info:
   author: Ricardo Felipe Klein
-  description: Basic CentOS7 configs
+  description: Role to install and configure php-fpm on el7
   company: N/A
 
   license: GPLv3
