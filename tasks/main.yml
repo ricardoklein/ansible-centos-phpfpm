@@ -7,12 +7,12 @@
 - name: Create php user group "{{ ansible_centos_phpfpm__group }}"
   group:
     name: "{{ ansible_centos_phpfpm__group }}"
-    gid: "{{ ansible_centos_phpfpm__group_uid }}"
+    #gid: "{{ ansible_centos_phpfpm__group_uid }}"
 
 - name: Create php user "{{ ansible_centos_phpfpm__user }}"
   user:
     name: "{{ ansible_centos_phpfpm__user }}"
-    uid: "{{ ansible_centos_phpfpm__user_uid }}"
+    #uid: "{{ ansible_centos_phpfpm__user_uid }}"
     group: "{{ ansible_centos_phpfpm__group }}"
     home: "{{ ansible_centos_phpfpm__user_home }}"
     shell: "{{ ansible_centos_phpfpm__user_shell }}"
