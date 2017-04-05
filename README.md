@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/kleinstuff/ansible-centos-phpfpm.png)](https://travis-ci.org/kleinstuff/ansible-centos-phpfpm.png)
+
+
 kleinstuff.centos-phpfpm
 ========================
 
