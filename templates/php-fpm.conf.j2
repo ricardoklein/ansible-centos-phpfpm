@@ -56,4 +56,10 @@ ping.path = /phpping
 ;security.limit_extensions = .php .php3 .php4 .php5
 
 
-{{ ansible_centos_phpfpm__extra_phpfpmconf_params }}
+{% if ansible_centos_phpfpm__extra_phpfpmconf_params is defined %}
+    {% for extra_conf in ansible_centos_phpfpm__extra_phpfpmconf_params %}
+    ; {{ extra_ini.name }}
+      {{ extra_conf.params }}
+    {% endfor %}
+{% endif %}
+
