@@ -1,0 +1,3 @@
+# ADD SELinux rules
+# ADD Variables to control fpm process type (pm = static|dinamic|ondemand)
+# SET php-fpm process.max == pm.max_children
